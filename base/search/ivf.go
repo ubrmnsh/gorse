@@ -15,12 +15,15 @@
 package search
 
 import (
+	"encoding/gob"
+	"io"
 	"math"
 	"math/rand"
 	"sync"
 	"time"
 
 	"github.com/chewxy/math32"
+	"github.com/juju/errors"
 	"github.com/zhenghaoz/gorse/base"
 	"github.com/zhenghaoz/gorse/base/heap"
 	"github.com/zhenghaoz/gorse/base/log"
@@ -341,4 +344,63 @@ func EstimateIVFBuilderComplexity(num, numEpoch int) int {
 	// search complexity
 	complexity += num * DefaultTestSize * numEpoch
 	return complexity
+}
+
+const magic = "IVF0"
+
+func (idx *IVF) marshal(w io.Writer, nameIndex base.Index) error {
+	encoder := gob.NewEncoder(w)
+	// Write magic header.
+	if err := encoder.Encode(magic); err != nil {
+		return errors.Trace(err)
+	}
+	// Write clusters.
+	if err := encoder.Encode(len(idx.clusters)); err != nil {
+		return errors.Trace(err)
+	}
+	for i := range idx.clusters {
+		if err := encoder.Encode(len(idx.clusters[i].observations)); err != nil {
+			return errors.Trace(err)
+		}
+		for j := range idx.clusters[i].observations {
+			name := nameIndex.ToName(idx.clusters[i].observations[j])
+			if err := encoder.Encode(name); err != nil {
+				return errors.Trace(err)
+			}
+		}
+	}
+	return nil
+}
+
+func (idx *IVF) unmarshal(r io.Reader, nameIndex base.Index) error {
+	decoder := gob.NewDecoder(r)
+	// Check magic header.
+	var header string
+	if err := decoder.Decode(&header); err != nil {
+		return errors.Trace(err)
+	}
+	if header != magic {
+		return errors.Errorf("invalid cache file")
+	}
+	// Read clusters
+	var numClusters int
+	if err := decoder.Decode(&numClusters); err != nil {
+		return errors.Trace(err)
+	}
+	idx.clusters = make([]ivfCluster, numClusters)
+	for i := range idx.clusters {
+		var numObservations int
+		if err := decoder.Decode(&numObservations); err != nil {
+			return errors.Trace(err)
+		}
+		idx.clusters[i].observations = make([]int32, numObservations)
+		for j := range idx.clusters[i].observations {
+			var name string
+			if err := decoder.Decode(&name); err != nil {
+				return errors.Trace(err)
+			}
+			idx.clusters[i].observations[j] = nameIndex.ToNumber(name)
+		}
+	}
+	return nil
 }
