@@ -128,6 +128,7 @@ type NeighborsConfig struct {
 	IndexClusteringEpoch int     `mapstructure:"index_clustering_epoch" validate:"gt=0"`
 	IndexTargetRecall    float32 `mapstructure:"index_target_recall" validate:"gt=0"`
 	IndexMaxProbe        int     `mapstructure:"index_max_probe" validate:"gt=0"`
+	IndexTestSize        int     `mapstructure:"index_test_size" validate:"gt=0"`
 }
 
 type CollaborativeConfig struct {
@@ -203,14 +204,16 @@ func GetDefaultConfig() *Config {
 				EnableIndex:          true,
 				IndexClusteringEpoch: 100,
 				IndexTargetRecall:    0.8,
-				IndexMaxProbe:        3,
+				IndexMaxProbe:        64,
+				IndexTestSize:        1000,
 			},
 			ItemNeighbors: NeighborsConfig{
 				NeighborType:         "auto",
 				EnableIndex:          true,
 				IndexClusteringEpoch: 100,
 				IndexTargetRecall:    0.8,
-				IndexMaxProbe:        3,
+				IndexMaxProbe:        64,
+				IndexTestSize:        1000,
 			},
 			Collaborative: CollaborativeConfig{
 				ModelFitPeriod:    60 * time.Minute,
@@ -486,12 +489,14 @@ func setDefault() {
 	viper.SetDefault("recommend.user_neighbors.index_clustering_epoch", defaultConfig.Recommend.UserNeighbors.IndexClusteringEpoch)
 	viper.SetDefault("recommend.user_neighbors.index_target_recall", defaultConfig.Recommend.UserNeighbors.IndexTargetRecall)
 	viper.SetDefault("recommend.user_neighbors.index_max_probe", defaultConfig.Recommend.UserNeighbors.IndexMaxProbe)
+	viper.SetDefault("recommend.user_neighbors.index_test_size", defaultConfig.Recommend.UserNeighbors.IndexTestSize)
 	// [recommend.item_neighbors]
 	viper.SetDefault("recommend.item_neighbors.neighbor_type", defaultConfig.Recommend.ItemNeighbors.NeighborType)
 	viper.SetDefault("recommend.item_neighbors.enable_index", defaultConfig.Recommend.ItemNeighbors.EnableIndex)
 	viper.SetDefault("recommend.item_neighbors.index_clustering_epoch", defaultConfig.Recommend.ItemNeighbors.IndexClusteringEpoch)
 	viper.SetDefault("recommend.item_neighbors.index_target_recall", defaultConfig.Recommend.ItemNeighbors.IndexTargetRecall)
 	viper.SetDefault("recommend.item_neighbors.index_max_probe", defaultConfig.Recommend.ItemNeighbors.IndexMaxProbe)
+	viper.SetDefault("recommend.item_neighbors.index_test_size", defaultConfig.Recommend.ItemNeighbors.IndexTestSize)
 	// [recommend.collaborative]
 	viper.SetDefault("recommend.collaborative.model_fit_period", defaultConfig.Recommend.Collaborative.ModelFitPeriod)
 	viper.SetDefault("recommend.collaborative.model_search_period", defaultConfig.Recommend.Collaborative.ModelSearchPeriod)

@@ -93,13 +93,17 @@ func TestUnmarshal(t *testing.T) {
 			// [recommend.user_neighbors]
 			assert.Equal(t, "similar", config.Recommend.UserNeighbors.NeighborType)
 			assert.True(t, config.Recommend.UserNeighbors.EnableIndex)
+			assert.Equal(t, 100, config.Recommend.UserNeighbors.IndexClusteringEpoch)
 			assert.Equal(t, float32(0.8), config.Recommend.UserNeighbors.IndexTargetRecall)
-			assert.Equal(t, 3, config.Recommend.UserNeighbors.IndexMaxProbe)
+			assert.Equal(t, 64, config.Recommend.UserNeighbors.IndexMaxProbe)
+			assert.Equal(t, 1000, config.Recommend.UserNeighbors.IndexTestSize)
 			// [recommend.item_neighbors]
 			assert.Equal(t, "similar", config.Recommend.ItemNeighbors.NeighborType)
 			assert.True(t, config.Recommend.ItemNeighbors.EnableIndex)
+			assert.Equal(t, 100, config.Recommend.ItemNeighbors.IndexClusteringEpoch)
 			assert.Equal(t, float32(0.8), config.Recommend.ItemNeighbors.IndexTargetRecall)
-			assert.Equal(t, 3, config.Recommend.ItemNeighbors.IndexMaxProbe)
+			assert.Equal(t, 64, config.Recommend.ItemNeighbors.IndexMaxProbe)
+			assert.Equal(t, 1000, config.Recommend.ItemNeighbors.IndexTestSize)
 			// [recommend.collaborative]
 			assert.True(t, config.Recommend.Collaborative.EnableIndex)
 			assert.Equal(t, float32(0.9), config.Recommend.Collaborative.IndexRecall)
