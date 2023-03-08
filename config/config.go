@@ -123,12 +123,13 @@ type PopularConfig struct {
 }
 
 type NeighborsConfig struct {
-	NeighborType         string  `mapstructure:"neighbor_type" validate:"oneof=auto similar related ''"`
-	EnableIndex          bool    `mapstructure:"enable_index"`
-	IndexClusteringEpoch int     `mapstructure:"index_clustering_epoch" validate:"gt=0"`
-	IndexTargetRecall    float32 `mapstructure:"index_target_recall" validate:"gt=0"`
-	IndexMaxProbe        int     `mapstructure:"index_max_probe" validate:"gt=0"`
-	IndexTestSize        int     `mapstructure:"index_test_size" validate:"gt=0"`
+	NeighborType             string  `mapstructure:"neighbor_type" validate:"oneof=auto similar related ''"`
+	EnableIndex              bool    `mapstructure:"enable_index"`
+	IndexClusteringErrorRate float64 `mapstructure:"index_clustering_error_rate" validate:"gt=0"`
+	IndexClusteringEpoch     int     `mapstructure:"index_clustering_epoch" validate:"gt=0"`
+	IndexTargetRecall        float32 `mapstructure:"index_target_recall" validate:"gt=0"`
+	IndexMaxProbe            int     `mapstructure:"index_max_probe" validate:"gt=0"`
+	IndexTestSize            int     `mapstructure:"index_test_size" validate:"gt=0"`
 }
 
 type CollaborativeConfig struct {
@@ -200,20 +201,22 @@ func GetDefaultConfig() *Config {
 				PopularWindow: 180 * 24 * time.Hour,
 			},
 			UserNeighbors: NeighborsConfig{
-				NeighborType:         "auto",
-				EnableIndex:          true,
-				IndexClusteringEpoch: 100,
-				IndexTargetRecall:    0.8,
-				IndexMaxProbe:        64,
-				IndexTestSize:        1000,
+				NeighborType:             "auto",
+				EnableIndex:              true,
+				IndexClusteringErrorRate: 0.01,
+				IndexClusteringEpoch:     100,
+				IndexTargetRecall:        0.8,
+				IndexMaxProbe:            64,
+				IndexTestSize:            1000,
 			},
 			ItemNeighbors: NeighborsConfig{
-				NeighborType:         "auto",
-				EnableIndex:          true,
-				IndexClusteringEpoch: 100,
-				IndexTargetRecall:    0.8,
-				IndexMaxProbe:        64,
-				IndexTestSize:        1000,
+				NeighborType:             "auto",
+				EnableIndex:              true,
+				IndexClusteringErrorRate: 0.01,
+				IndexClusteringEpoch:     100,
+				IndexTargetRecall:        0.8,
+				IndexMaxProbe:            64,
+				IndexTestSize:            1000,
 			},
 			Collaborative: CollaborativeConfig{
 				ModelFitPeriod:    60 * time.Minute,
@@ -486,6 +489,7 @@ func setDefault() {
 	// [recommend.user_neighbors]
 	viper.SetDefault("recommend.user_neighbors.neighbor_type", defaultConfig.Recommend.UserNeighbors.NeighborType)
 	viper.SetDefault("recommend.user_neighbors.enable_index", defaultConfig.Recommend.UserNeighbors.EnableIndex)
+	viper.SetDefault("recommend.user_neighbors.index_clustering_error_rate", defaultConfig.Recommend.ItemNeighbors.IndexClusteringErrorRate)
 	viper.SetDefault("recommend.user_neighbors.index_clustering_epoch", defaultConfig.Recommend.UserNeighbors.IndexClusteringEpoch)
 	viper.SetDefault("recommend.user_neighbors.index_target_recall", defaultConfig.Recommend.UserNeighbors.IndexTargetRecall)
 	viper.SetDefault("recommend.user_neighbors.index_max_probe", defaultConfig.Recommend.UserNeighbors.IndexMaxProbe)
@@ -493,6 +497,7 @@ func setDefault() {
 	// [recommend.item_neighbors]
 	viper.SetDefault("recommend.item_neighbors.neighbor_type", defaultConfig.Recommend.ItemNeighbors.NeighborType)
 	viper.SetDefault("recommend.item_neighbors.enable_index", defaultConfig.Recommend.ItemNeighbors.EnableIndex)
+	viper.SetDefault("recommend.item_neighbors.index_clustering_error_rate", defaultConfig.Recommend.ItemNeighbors.IndexClusteringErrorRate)
 	viper.SetDefault("recommend.item_neighbors.index_clustering_epoch", defaultConfig.Recommend.ItemNeighbors.IndexClusteringEpoch)
 	viper.SetDefault("recommend.item_neighbors.index_target_recall", defaultConfig.Recommend.ItemNeighbors.IndexTargetRecall)
 	viper.SetDefault("recommend.item_neighbors.index_max_probe", defaultConfig.Recommend.ItemNeighbors.IndexMaxProbe)

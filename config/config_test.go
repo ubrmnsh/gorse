@@ -93,6 +93,7 @@ func TestUnmarshal(t *testing.T) {
 			// [recommend.user_neighbors]
 			assert.Equal(t, "similar", config.Recommend.UserNeighbors.NeighborType)
 			assert.True(t, config.Recommend.UserNeighbors.EnableIndex)
+			assert.Equal(t, 0.01, config.Recommend.UserNeighbors.IndexClusteringErrorRate)
 			assert.Equal(t, 100, config.Recommend.UserNeighbors.IndexClusteringEpoch)
 			assert.Equal(t, float32(0.8), config.Recommend.UserNeighbors.IndexTargetRecall)
 			assert.Equal(t, 64, config.Recommend.UserNeighbors.IndexMaxProbe)
@@ -100,6 +101,7 @@ func TestUnmarshal(t *testing.T) {
 			// [recommend.item_neighbors]
 			assert.Equal(t, "similar", config.Recommend.ItemNeighbors.NeighborType)
 			assert.True(t, config.Recommend.ItemNeighbors.EnableIndex)
+			assert.Equal(t, 0.01, config.Recommend.ItemNeighbors.IndexClusteringErrorRate)
 			assert.Equal(t, 100, config.Recommend.ItemNeighbors.IndexClusteringEpoch)
 			assert.Equal(t, float32(0.8), config.Recommend.ItemNeighbors.IndexTargetRecall)
 			assert.Equal(t, 64, config.Recommend.ItemNeighbors.IndexMaxProbe)
