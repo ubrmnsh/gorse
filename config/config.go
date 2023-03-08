@@ -123,10 +123,11 @@ type PopularConfig struct {
 }
 
 type NeighborsConfig struct {
-	NeighborType  string  `mapstructure:"neighbor_type" validate:"oneof=auto similar related ''"`
-	EnableIndex   bool    `mapstructure:"enable_index"`
-	IndexRecall   float32 `mapstructure:"index_recall" validate:"gt=0"`
-	IndexFitEpoch int     `mapstructure:"index_fit_epoch" validate:"gt=0"`
+	NeighborType         string  `mapstructure:"neighbor_type" validate:"oneof=auto similar related ''"`
+	EnableIndex          bool    `mapstructure:"enable_index"`
+	IndexClusteringEpoch int     `mapstructure:"index_clustering_epoch" validate:"gt=0"`
+	IndexTargetRecall    float32 `mapstructure:"index_target_recall" validate:"gt=0"`
+	IndexMaxProbe        int     `mapstructure:"index_max_probe" validate:"gt=0"`
 }
 
 type CollaborativeConfig struct {
@@ -198,16 +199,18 @@ func GetDefaultConfig() *Config {
 				PopularWindow: 180 * 24 * time.Hour,
 			},
 			UserNeighbors: NeighborsConfig{
-				NeighborType:  "auto",
-				EnableIndex:   true,
-				IndexRecall:   0.8,
-				IndexFitEpoch: 3,
+				NeighborType:         "auto",
+				EnableIndex:          true,
+				IndexClusteringEpoch: 100,
+				IndexTargetRecall:    0.8,
+				IndexMaxProbe:        3,
 			},
 			ItemNeighbors: NeighborsConfig{
-				NeighborType:  "auto",
-				EnableIndex:   true,
-				IndexRecall:   0.8,
-				IndexFitEpoch: 3,
+				NeighborType:         "auto",
+				EnableIndex:          true,
+				IndexClusteringEpoch: 100,
+				IndexTargetRecall:    0.8,
+				IndexMaxProbe:        3,
 			},
 			Collaborative: CollaborativeConfig{
 				ModelFitPeriod:    60 * time.Minute,
@@ -260,7 +263,7 @@ func (config *Config) UserNeighborDigest() string {
 	}
 	// index option
 	if config.Recommend.UserNeighbors.EnableIndex {
-		builder.WriteString(fmt.Sprintf("-%v-%v", config.Recommend.UserNeighbors.IndexRecall, config.Recommend.UserNeighbors.IndexFitEpoch))
+		builder.WriteString(fmt.Sprintf("-%v-%v", config.Recommend.UserNeighbors.IndexTargetRecall, config.Recommend.UserNeighbors.IndexMaxProbe))
 	} else {
 		builder.WriteString("--")
 	}
@@ -280,7 +283,7 @@ func (config *Config) ItemNeighborDigest() string {
 	}
 	// index option
 	if config.Recommend.ItemNeighbors.EnableIndex {
-		builder.WriteString(fmt.Sprintf("-%v-%v", config.Recommend.ItemNeighbors.IndexRecall, config.Recommend.ItemNeighbors.IndexFitEpoch))
+		builder.WriteString(fmt.Sprintf("-%v-%v", config.Recommend.ItemNeighbors.IndexTargetRecall, config.Recommend.ItemNeighbors.IndexMaxProbe))
 	} else {
 		builder.WriteString("--")
 	}
@@ -480,13 +483,15 @@ func setDefault() {
 	// [recommend.user_neighbors]
 	viper.SetDefault("recommend.user_neighbors.neighbor_type", defaultConfig.Recommend.UserNeighbors.NeighborType)
 	viper.SetDefault("recommend.user_neighbors.enable_index", defaultConfig.Recommend.UserNeighbors.EnableIndex)
-	viper.SetDefault("recommend.user_neighbors.index_recall", defaultConfig.Recommend.UserNeighbors.IndexRecall)
-	viper.SetDefault("recommend.user_neighbors.index_fit_epoch", defaultConfig.Recommend.UserNeighbors.IndexFitEpoch)
+	viper.SetDefault("recommend.user_neighbors.index_clustering_epoch", defaultConfig.Recommend.UserNeighbors.IndexClusteringEpoch)
+	viper.SetDefault("recommend.user_neighbors.index_target_recall", defaultConfig.Recommend.UserNeighbors.IndexTargetRecall)
+	viper.SetDefault("recommend.user_neighbors.index_max_probe", defaultConfig.Recommend.UserNeighbors.IndexMaxProbe)
 	// [recommend.item_neighbors]
 	viper.SetDefault("recommend.item_neighbors.neighbor_type", defaultConfig.Recommend.ItemNeighbors.NeighborType)
 	viper.SetDefault("recommend.item_neighbors.enable_index", defaultConfig.Recommend.ItemNeighbors.EnableIndex)
-	viper.SetDefault("recommend.item_neighbors.index_recall", defaultConfig.Recommend.ItemNeighbors.IndexRecall)
-	viper.SetDefault("recommend.item_neighbors.index_fit_epoch", defaultConfig.Recommend.ItemNeighbors.IndexFitEpoch)
+	viper.SetDefault("recommend.item_neighbors.index_clustering_epoch", defaultConfig.Recommend.ItemNeighbors.IndexClusteringEpoch)
+	viper.SetDefault("recommend.item_neighbors.index_target_recall", defaultConfig.Recommend.ItemNeighbors.IndexTargetRecall)
+	viper.SetDefault("recommend.item_neighbors.index_max_probe", defaultConfig.Recommend.ItemNeighbors.IndexMaxProbe)
 	// [recommend.collaborative]
 	viper.SetDefault("recommend.collaborative.model_fit_period", defaultConfig.Recommend.Collaborative.ModelFitPeriod)
 	viper.SetDefault("recommend.collaborative.model_search_period", defaultConfig.Recommend.Collaborative.ModelSearchPeriod)

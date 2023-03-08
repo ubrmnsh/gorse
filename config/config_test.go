@@ -93,13 +93,13 @@ func TestUnmarshal(t *testing.T) {
 			// [recommend.user_neighbors]
 			assert.Equal(t, "similar", config.Recommend.UserNeighbors.NeighborType)
 			assert.True(t, config.Recommend.UserNeighbors.EnableIndex)
-			assert.Equal(t, float32(0.8), config.Recommend.UserNeighbors.IndexRecall)
-			assert.Equal(t, 3, config.Recommend.UserNeighbors.IndexFitEpoch)
+			assert.Equal(t, float32(0.8), config.Recommend.UserNeighbors.IndexTargetRecall)
+			assert.Equal(t, 3, config.Recommend.UserNeighbors.IndexMaxProbe)
 			// [recommend.item_neighbors]
 			assert.Equal(t, "similar", config.Recommend.ItemNeighbors.NeighborType)
 			assert.True(t, config.Recommend.ItemNeighbors.EnableIndex)
-			assert.Equal(t, float32(0.8), config.Recommend.ItemNeighbors.IndexRecall)
-			assert.Equal(t, 3, config.Recommend.ItemNeighbors.IndexFitEpoch)
+			assert.Equal(t, float32(0.8), config.Recommend.ItemNeighbors.IndexTargetRecall)
+			assert.Equal(t, 3, config.Recommend.ItemNeighbors.IndexMaxProbe)
 			// [recommend.collaborative]
 			assert.True(t, config.Recommend.Collaborative.EnableIndex)
 			assert.Equal(t, float32(0.9), config.Recommend.Collaborative.IndexRecall)
@@ -259,15 +259,15 @@ func TestConfig_UserNeighborDigest(t *testing.T) {
 	cfg1, cfg2 = GetDefaultConfig(), GetDefaultConfig()
 	cfg1.Recommend.UserNeighbors.EnableIndex = true
 	cfg2.Recommend.UserNeighbors.EnableIndex = true
-	cfg1.Recommend.UserNeighbors.IndexRecall = 0.5
-	cfg2.Recommend.UserNeighbors.IndexRecall = 0.6
+	cfg1.Recommend.UserNeighbors.IndexTargetRecall = 0.5
+	cfg2.Recommend.UserNeighbors.IndexTargetRecall = 0.6
 	assert.NotEqual(t, cfg1.UserNeighborDigest(), cfg2.UserNeighborDigest())
 
 	cfg1, cfg2 = GetDefaultConfig(), GetDefaultConfig()
 	cfg1.Recommend.UserNeighbors.EnableIndex = true
 	cfg2.Recommend.UserNeighbors.EnableIndex = true
-	cfg1.Recommend.UserNeighbors.IndexFitEpoch = 10
-	cfg2.Recommend.UserNeighbors.IndexFitEpoch = 11
+	cfg1.Recommend.UserNeighbors.IndexMaxProbe = 10
+	cfg2.Recommend.UserNeighbors.IndexMaxProbe = 11
 	assert.NotEqual(t, cfg1.UserNeighborDigest(), cfg2.UserNeighborDigest())
 }
 
@@ -306,15 +306,15 @@ func TestConfig_ItemNeighborDigest(t *testing.T) {
 	cfg1, cfg2 = GetDefaultConfig(), GetDefaultConfig()
 	cfg1.Recommend.ItemNeighbors.EnableIndex = true
 	cfg2.Recommend.ItemNeighbors.EnableIndex = true
-	cfg1.Recommend.ItemNeighbors.IndexRecall = 0.5
-	cfg2.Recommend.ItemNeighbors.IndexRecall = 0.6
+	cfg1.Recommend.ItemNeighbors.IndexTargetRecall = 0.5
+	cfg2.Recommend.ItemNeighbors.IndexTargetRecall = 0.6
 	assert.NotEqual(t, cfg1.ItemNeighborDigest(), cfg2.ItemNeighborDigest())
 
 	cfg1, cfg2 = GetDefaultConfig(), GetDefaultConfig()
 	cfg1.Recommend.ItemNeighbors.EnableIndex = true
 	cfg2.Recommend.ItemNeighbors.EnableIndex = true
-	cfg1.Recommend.ItemNeighbors.IndexFitEpoch = 10
-	cfg2.Recommend.ItemNeighbors.IndexFitEpoch = 11
+	cfg1.Recommend.ItemNeighbors.IndexMaxProbe = 10
+	cfg2.Recommend.ItemNeighbors.IndexMaxProbe = 11
 	assert.NotEqual(t, cfg1.ItemNeighborDigest(), cfg2.ItemNeighborDigest())
 }
 
