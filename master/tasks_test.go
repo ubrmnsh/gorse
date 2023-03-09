@@ -148,8 +148,8 @@ func TestMaster_FindItemNeighborsIVF(t *testing.T) {
 	m.Config.Recommend.CacheSize = 3
 	m.Config.Master.NumJobs = 4
 	m.Config.Recommend.ItemNeighbors.EnableIndex = true
-	m.Config.Recommend.ItemNeighbors.IndexRecall = 1
-	m.Config.Recommend.ItemNeighbors.IndexFitEpoch = 10
+	m.Config.Recommend.ItemNeighbors.IndexTargetRecall = 1
+	m.Config.Recommend.ItemNeighbors.IndexMaxProbe = 10
 	// collect similar
 	items := []data.Item{
 		{"0", false, []string{"*"}, time.Now(), []string{"a", "b", "c", "d"}, ""},
@@ -261,8 +261,8 @@ func TestMaster_FindItemNeighborsIVF_ZeroIDF(t *testing.T) {
 	m.Config.Recommend.CacheSize = 3
 	m.Config.Master.NumJobs = 4
 	m.Config.Recommend.ItemNeighbors.EnableIndex = true
-	m.Config.Recommend.ItemNeighbors.IndexRecall = 1
-	m.Config.Recommend.ItemNeighbors.IndexFitEpoch = 10
+	m.Config.Recommend.ItemNeighbors.IndexTargetRecall = 1
+	m.Config.Recommend.ItemNeighbors.IndexMaxProbe = 10
 
 	// create dataset
 	err := m.DataClient.BatchInsertItems(ctx, []data.Item{
@@ -392,8 +392,8 @@ func TestMaster_FindUserNeighborsIVF(t *testing.T) {
 	m.Config.Recommend.CacheSize = 3
 	m.Config.Master.NumJobs = 4
 	m.Config.Recommend.UserNeighbors.EnableIndex = true
-	m.Config.Recommend.UserNeighbors.IndexRecall = 1
-	m.Config.Recommend.UserNeighbors.IndexFitEpoch = 10
+	m.Config.Recommend.UserNeighbors.IndexTargetRecall = 1
+	m.Config.Recommend.UserNeighbors.IndexMaxProbe = 10
 	// collect similar
 	users := []data.User{
 		{"0", []string{"a", "b", "c", "d"}, nil, ""},
@@ -481,8 +481,8 @@ func TestMaster_FindUserNeighborsIVF_ZeroIDF(t *testing.T) {
 	m.Config.Recommend.CacheSize = 3
 	m.Config.Master.NumJobs = 4
 	m.Config.Recommend.UserNeighbors.EnableIndex = true
-	m.Config.Recommend.UserNeighbors.IndexRecall = 1
-	m.Config.Recommend.UserNeighbors.IndexFitEpoch = 10
+	m.Config.Recommend.UserNeighbors.IndexTargetRecall = 1
+	m.Config.Recommend.UserNeighbors.IndexMaxProbe = 10
 
 	// create dataset
 	err := m.DataClient.BatchInsertUsers(ctx, []data.User{

@@ -18,15 +18,10 @@ import (
 	"github.com/zhenghaoz/gorse/base/heap"
 )
 
-var _ VectorIndex = &Bruteforce{}
-
 // Bruteforce is a naive implementation of vector index.
 type Bruteforce struct {
 	vectors []Vector
 }
-
-// Build a vector index on data.
-func (b *Bruteforce) Build() {}
 
 // NewBruteforce creates a Bruteforce vector index.
 func NewBruteforce(vectors []Vector) *Bruteforce {

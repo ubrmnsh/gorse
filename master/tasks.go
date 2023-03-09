@@ -210,7 +210,7 @@ func (m *Master) estimateFindItemNeighborsComplexity(dataset *ranking.DataSet) i
 		complexity += len(dataset.ItemLabels) + int(dataset.NumItemLabels)
 	}
 	if m.Config.Recommend.ItemNeighbors.EnableIndex {
-		complexity += search.EstimateIVFBuilderComplexity(dataset.ItemCount(), m.Config.Recommend.ItemNeighbors.IndexFitEpoch)
+		complexity += search.EstimateIVFBuilderComplexity(m.Config.Recommend.ItemNeighbors, dataset.ItemCount())
 	}
 	return complexity
 }
@@ -461,8 +461,8 @@ func (m *Master) findItemNeighborsIVF(dataset *ranking.DataSet, labelIDF, userID
 	builder := search.NewIVFBuilder(vectors, m.Config.Recommend.CacheSize,
 		search.SetIVFJobsAllocator(j))
 	var recall float32
-	index, recall = builder.Build(m.Config.Recommend.ItemNeighbors.IndexRecall,
-		m.Config.Recommend.ItemNeighbors.IndexFitEpoch,
+	index, recall = builder.Build(m.Config.Recommend.ItemNeighbors.IndexTargetRecall,
+		m.Config.Recommend.ItemNeighbors.IndexMaxProbe,
 		true,
 		m.taskMonitor.GetTask(TaskFindItemNeighbors))
 	ItemNeighborIndexRecall.Set(float64(recall))
@@ -534,7 +534,7 @@ func (m *Master) estimateFindUserNeighborsComplexity(dataset *ranking.DataSet) i
 		complexity += len(dataset.UserLabels) + int(dataset.NumUserLabels)
 	}
 	if m.Config.Recommend.UserNeighbors.EnableIndex {
-		complexity += search.EstimateIVFBuilderComplexity(dataset.UserCount(), m.Config.Recommend.UserNeighbors.IndexFitEpoch)
+		complexity += search.EstimateIVFBuilderComplexity(m.Config.Recommend.UserNeighbors, dataset.UserCount())
 	}
 	return complexity
 }
@@ -776,8 +776,8 @@ func (m *Master) findUserNeighborsIVF(dataset *ranking.DataSet, labelIDF, itemID
 		search.SetIVFJobsAllocator(j))
 	var recall float32
 	index, recall = builder.Build(
-		m.Config.Recommend.UserNeighbors.IndexRecall,
-		m.Config.Recommend.UserNeighbors.IndexFitEpoch,
+		m.Config.Recommend.UserNeighbors.IndexTargetRecall,
+		m.Config.Recommend.UserNeighbors.IndexMaxProbe,
 		true,
 		m.taskMonitor.GetTask(TaskFindUserNeighbors))
 	UserNeighborIndexRecall.Set(float64(recall))
