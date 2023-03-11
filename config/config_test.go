@@ -108,6 +108,7 @@ func TestUnmarshal(t *testing.T) {
 			assert.Equal(t, 1000, config.Recommend.ItemNeighbors.IndexTestSize)
 			// [recommend.collaborative]
 			assert.True(t, config.Recommend.Collaborative.EnableIndex)
+			assert.Equal(t, 1000, config.Recommend.Collaborative.IndexTestSize)
 			assert.Equal(t, float32(0.9), config.Recommend.Collaborative.IndexRecall)
 			assert.Equal(t, 3, config.Recommend.Collaborative.IndexFitEpoch)
 			assert.Equal(t, 60*time.Minute, config.Recommend.Collaborative.ModelFitPeriod)

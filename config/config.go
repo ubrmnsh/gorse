@@ -139,6 +139,7 @@ type CollaborativeConfig struct {
 	ModelSearchTrials     int           `mapstructure:"model_search_trials" validate:"gt=0"`
 	EnableModelSizeSearch bool          `mapstructure:"enable_model_size_search"`
 	EnableIndex           bool          `mapstructure:"enable_index"`
+	IndexTestSize         int           `mapstructure:"index_test_size" validate:"gt=0"`
 	IndexRecall           float32       `mapstructure:"index_recall" validate:"gt=0"`
 	IndexFitEpoch         int           `mapstructure:"index_fit_epoch" validate:"gt=0"`
 }
@@ -224,6 +225,7 @@ func GetDefaultConfig() *Config {
 				ModelSearchEpoch:  100,
 				ModelSearchTrials: 10,
 				EnableIndex:       true,
+				IndexTestSize:     1000,
 				IndexRecall:       0.9,
 				IndexFitEpoch:     3,
 			},
@@ -508,6 +510,7 @@ func setDefault() {
 	viper.SetDefault("recommend.collaborative.model_search_epoch", defaultConfig.Recommend.Collaborative.ModelSearchEpoch)
 	viper.SetDefault("recommend.collaborative.model_search_trials", defaultConfig.Recommend.Collaborative.ModelSearchTrials)
 	viper.SetDefault("recommend.collaborative.enable_index", defaultConfig.Recommend.Collaborative.EnableIndex)
+	viper.SetDefault("recommend.collaborative.index_test_size", defaultConfig.Recommend.Collaborative.IndexTestSize)
 	viper.SetDefault("recommend.collaborative.index_recall", defaultConfig.Recommend.Collaborative.IndexRecall)
 	viper.SetDefault("recommend.collaborative.index_fit_epoch", defaultConfig.Recommend.Collaborative.IndexFitEpoch)
 	// [recommend.replacement]
