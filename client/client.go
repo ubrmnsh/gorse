@@ -67,6 +67,10 @@ func (c *GorseClient) UpdateUser(ctx context.Context, userId string, user UserPa
 	return request[RowAffected](ctx, c, "PATCH", fmt.Sprintf("%s/api/user/%s", c.entryPoint, userId), user)
 }
 
+func (c *GorseClient) UpdateUserId(ctx context.Context, userId string, newUserId string) (RowAffected, error) {
+	return request[RowAffected](ctx, c, "PATCH", c.entryPoint+fmt.Sprintf("/api/user/update%s", userId), user)
+}
+
 func (c *GorseClient) GetUser(ctx context.Context, userId string) (User, error) {
 	return request[User, any](ctx, c, "GET", c.entryPoint+fmt.Sprintf("/api/user/%s", userId), nil)
 }

@@ -17,13 +17,15 @@ package data
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/go-redis/redis/v9"
 	"github.com/juju/errors"
 	"github.com/scylladb/go-set/strset"
 	"github.com/thoas/go-funk"
-	"strconv"
-	"strings"
-	"time"
 )
 
 const (
@@ -296,6 +298,19 @@ func (r *Redis) BatchInsertUsers(ctx context.Context, users []User) error {
 			return err
 		}
 	}
+	return nil
+}
+
+// UpdateUserId
+func (r *Redis) UpdateUserId(ctx context.Context, userId string, newUserId string) error {
+	// read user
+	user, err := r.GetUser(ctx, userId)
+	if err != nil {
+		return err
+	}
+	fmt.Println()
+	fmt.Println("user from redis =->>", user)
+	fmt.Println()
 	return nil
 }
 

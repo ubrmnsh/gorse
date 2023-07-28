@@ -19,6 +19,8 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"time"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/juju/errors"
 	_ "github.com/lib/pq"
@@ -32,7 +34,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	_ "modernc.org/sqlite"
-	"time"
 )
 
 const bufSize = 1
@@ -630,9 +631,11 @@ func (d *SQLDatabase) DeleteUser(ctx context.Context, userId string) error {
 func (d *SQLDatabase) GetUser(ctx context.Context, userId string) (User, error) {
 	var result *sql.Rows
 	var err error
-	result, err = d.gormDB.WithContext(ctx).Table(d.UsersTable()).
+	
+  result, err = d.gormDB.WithContext(ctx).Table(d.UsersTable()).
 		Select("user_id, labels, subscribe, comment").
 		Where("user_id = ?", userId).Rows()
+
 	if err != nil {
 		return User{}, errors.Trace(err)
 	}
@@ -675,6 +678,29 @@ func (d *SQLDatabase) ModifyUser(ctx context.Context, userId string, patch UserP
 		attributes["subscribe"] = string(text)
 	}
 	err := d.gormDB.WithContext(ctx).Model(&SQLUser{UserId: userId}).Updates(attributes).Error
+	return errors.Trace(err)
+}
+
+func (d *SQLDatabase) UpdateUserId(ctx context.Context, userId string, newUserId string) error {
+	user, userErr := d.GetUser(ctx, userId)
+	if userErr != nil {
+		return userErr
+	}
+
+  fmt.Println()
+	fmt.Println("user found", user)
+  fmt.Println()
+
+	tx := d.gormDB.WithContext(ctx).Begin()
+	err := tx.Table("users").Where("user_id = ?", userId).Update("user_id", newUserId).Error
+	if err == nil {
+		err = tx.Table("feedback").Where("user_id = ?", userId).Update("user_id", newUserId).Error
+	}
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
 	return errors.Trace(err)
 }
 

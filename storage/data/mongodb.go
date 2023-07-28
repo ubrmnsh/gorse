@@ -18,13 +18,14 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"time"
+
 	"github.com/juju/errors"
 	"github.com/scylladb/go-set/strset"
 	"github.com/zhenghaoz/gorse/storage"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
 )
 
 func feedbackKeyFromString(s string) (*FeedbackKey, error) {
@@ -384,6 +385,12 @@ func (db *MongoDB) ModifyUser(ctx context.Context, userId string, patch UserPatc
 	c := db.client.Database(db.dbName).Collection(db.UsersTable())
 	_, err := c.UpdateOne(ctx, bson.M{"userid": bson.M{"$eq": userId}}, bson.M{"$set": update})
 	return errors.Trace(err)
+}
+
+// UpdateUserId
+// TODO: implement logic
+func (db *MongoDB) UpdateUserId(ctx context.Context, userId string, newUserId string) error {
+	return nil
 }
 
 // DeleteUser deletes a user from MongoDB.
